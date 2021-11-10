@@ -32,7 +32,7 @@ app.post("/api/upload-file", async (req, res) => {
       //Use the name of the input field (i.e. "file") to retrieve the uploaded file
       let file = req.files.file;
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      file.mv("../../../../coco-annotator/datasets/test2" + file.name);
+      file.mv("../../../../coco-annotator/datasets/test2/" + file.name);
       //send response
       res.send({
         status: true,
