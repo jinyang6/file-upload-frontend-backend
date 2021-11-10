@@ -116,7 +116,7 @@ const RegisterUploadPage = () => {
           //label="Suleta tus archivos aquí"
           accept=".png,image/*"
           // uploadingMessage={"Uploading..."}
-          url="http://localhost:2000/api/upload-file"
+          url="http://35.238.183.90:2000/api/upload-file"
           // url to storage location
           //uploadOnDrop
           //clickable={false}
