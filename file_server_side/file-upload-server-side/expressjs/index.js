@@ -4,6 +4,19 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const _ = require("lodash");
+const fs = require('fs');
+const ROUTE = "../../../../coco-annotator/datasets/train_image/"
+function get_highest_file_index(route) {
+  var files = fs.readdirSync(route);
+  var max_index = 0
+  for (var i = 0; i < files.length; i++) {
+      this_file_index = parseInt(files[i].match(/\d+/)[0])
+      if ( max_index < this_file_index) {
+          max_index = this_file_index
+      }
+  }
+  return max_index
+}
 
 const app = express();
 
@@ -31,8 +44,10 @@ app.post("/api/upload-file", async (req, res) => {
     } else {
       //Use the name of the input field (i.e. "file") to retrieve the uploaded file
       let file = req.files.file;
+      //Get highest file index to figure out a valid name
+      var filename = (get_highest_file_index(ROUTE) + 1).toString() + ".jpg"
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      file.mv("../../../../coco-annotator/datasets/test2/" + file.name);
+      file.mv(ROUTE + file.name);
       //send response
       res.send({
         status: true,
