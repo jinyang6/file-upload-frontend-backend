@@ -60,6 +60,7 @@ app.post("/api/upload-file", async (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err)
     res.status(500).send({
       status: false,
       message: "Unspected problem",
