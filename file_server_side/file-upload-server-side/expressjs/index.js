@@ -10,6 +10,8 @@ function get_highest_file_index(route) {
   var files = fs.readdirSync(route);
   var max_index = 0
   for (var i = 0; i < files.length; i++) {
+      console.log(files[i])
+      console.log(files[i].match(/\d+/))
       this_file_index = parseInt(files[i].match(/\d+/)[0])
       if ( max_index < this_file_index) {
           max_index = this_file_index
