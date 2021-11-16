@@ -47,7 +47,7 @@ app.post("/api/upload-file", async (req, res) => {
       //Get highest file index to figure out a valid name
       var filename = (get_highest_file_index(ROUTE) + 1).toString() + ".jpg"
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      file.mv(ROUTE + file.name);
+      file.mv(ROUTE + filename);
       //send response
       res.send({
         status: true,
