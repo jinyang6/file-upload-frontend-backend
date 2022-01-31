@@ -5,7 +5,13 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const _ = require("lodash");
 const fs = require('fs');
-const ROUTE = "../../../../coco-annotator/datasets/train_image/"
+const TRAIN_subdir = "train_image/"
+const VALIDATION_subdir = "validation_image/"
+const BASE_ROUTE = "../../../../coco-annotator/datasets/"
+
+// eg: using BASE_ROUTE + TRAIN_subdir to obtain the complete route  
+
+
 function get_highest_file_index(route) {
   var files = fs.readdirSync(route);
   var max_index = 0
@@ -36,7 +42,10 @@ const port = process.env.PORT || 2000;
 
 app.listen(port, () => console.log(`App is listening on port ${port}.`));
 
-app.post("/api/upload-file", async (req, res) => {
+
+// api to receive the train_images
+app.post("/api/upload-file/train_image", async (req, res) => {
+  const train_image_route = BASE_ROUTE + TRAIN_subdir
   try {
     if (!req.files) {
       res.send({
@@ -48,9 +57,48 @@ app.post("/api/upload-file", async (req, res) => {
       //Use the name of the input field (i.e. "file") to retrieve the uploaded file
       let file = req.files.file;
       //Get highest file index to figure out a valid name
-      var filename = (get_highest_file_index(ROUTE) + 1).toString() + ".jpg"
+      var filename = (get_highest_file_index(train_image_route) + 1).toString() + ".jpg"
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      file.mv(ROUTE + filename);
+      file.mv(train_image_route + filename);
+      //send response
+      res.send({
+        status: true,
+        message: "File was uploaded successfully",
+        payload: {
+          name: file.name,
+          mimetype: file.mimetype,
+          size: file.size,
+        },
+      });
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).send({
+      status: false,
+      message: "Unspected problem",
+      payload: {},
+    });
+  }
+});
+
+
+// api to receive the validation_images
+app.post("/api/upload-file/validation_image", async (req, res) => {
+  const validation_image_route = BASE_ROUTE + VALIDATION_subdir
+  try {
+    if (!req.files) {
+      res.send({
+        status: false,
+        message: "No file uploaded",
+        payload: {},
+      });
+    } else {
+      //Use the name of the input field (i.e. "file") to retrieve the uploaded file
+      let file = req.files.file;
+      //Get highest file index to figure out a valid name
+      var filename = (get_highest_file_index(validation_image_route) + 1).toString() + ".jpg"
+      //Use the mv() method to place the file in upload directory (i.e. "uploads")
+      file.mv(validation_image_route + filename);
       //send response
       res.send({
         status: true,
