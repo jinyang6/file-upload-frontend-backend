@@ -7,6 +7,8 @@ const _ = require("lodash");
 const fs = require('fs');
 const TRAIN_subdir = "train_image/"
 const VALIDATION_subdir = "validation_image/"
+const EDGE_DATA_subdir = "edge_data/"
+const EDGE_VALIDATION_subdir = "edge_validation/"
 const BASE_ROUTE = "../../../../coco-annotator/datasets/"
 
 // eg: using BASE_ROUTE + TRAIN_subdir to obtain the complete route  
@@ -99,6 +101,84 @@ app.post("/api/upload-file/validation_image", async (req, res) => {
       var filename = (get_highest_file_index(validation_image_route) + 1).toString() + ".jpg"
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
       file.mv(validation_image_route + filename);
+      //send response
+      res.send({
+        status: true,
+        message: "File was uploaded successfully",
+        payload: {
+          name: file.name,
+          mimetype: file.mimetype,
+          size: file.size,
+        },
+      });
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).send({
+      status: false,
+      message: "Unspected problem",
+      payload: {},
+    });
+  }
+});
+
+
+// api to receive the edge_data images
+app.post("/api/upload-file/edge_data", async (req, res) => {
+  const edge_data_route = BASE_ROUTE + EDGE_DATA_subdir
+  try {
+    if (!req.files) {
+      res.send({
+        status: false,
+        message: "No file uploaded",
+        payload: {},
+      });
+    } else {
+      //Use the name of the input field (i.e. "file") to retrieve the uploaded file
+      let file = req.files.file;
+      //Get highest file index to figure out a valid name
+      var filename = (get_highest_file_index(edge_data_route) + 1).toString() + ".jpg"
+      //Use the mv() method to place the file in upload directory (i.e. "uploads")
+      file.mv(edge_data_route + filename);
+      //send response
+      res.send({
+        status: true,
+        message: "File was uploaded successfully",
+        payload: {
+          name: file.name,
+          mimetype: file.mimetype,
+          size: file.size,
+        },
+      });
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).send({
+      status: false,
+      message: "Unspected problem",
+      payload: {},
+    });
+  }
+});
+
+
+// api to receive the edge_validation images
+app.post("/api/upload-file/edge_validation", async (req, res) => {
+  const edge_validation_route = BASE_ROUTE + EDGE_VALIDATION_subdir
+  try {
+    if (!req.files) {
+      res.send({
+        status: false,
+        message: "No file uploaded",
+        payload: {},
+      });
+    } else {
+      //Use the name of the input field (i.e. "file") to retrieve the uploaded file
+      let file = req.files.file;
+      //Get highest file index to figure out a valid name
+      var filename = (get_highest_file_index(edge_validation_route) + 1).toString() + ".jpg"
+      //Use the mv() method to place the file in upload directory (i.e. "uploads")
+      file.mv(edge_validation_route + filename);
       //send response
       res.send({
         status: true,
